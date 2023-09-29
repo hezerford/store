@@ -1,0 +1,12 @@
+{% extends 'shop/main.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center m-auto flex-column">
+    <h2 class="sub-title pt-5">Зарегистрируйтесь</h2>
+    <form class="pt-5" action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Зарегестрироваться</button>
+    </form>
+</div>
+{% endblock %}

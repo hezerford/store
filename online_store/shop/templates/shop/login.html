@@ -1,0 +1,33 @@
+{% extends 'shop/main.html' %}
+
+{% block content %}
+
+<div class="container">
+  <div class="d-flex justify-content-center align-items-center flex-column">
+    <h1 class='sub-title'>Authorization</h1>
+    <div class="email-form">
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-error">{{ form.non_field_errors }}</div>
+
+        {% for f in form %}
+          <p>
+            <label for="{{ f.id_for_label }}" class="email">{{f.label}}</label>{{f}}
+          </p>
+          <div class="form-error">{{f.errors}}</div>
+        {% endfor %}
+        <button type="submit">Войти</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% comment %} <div class="d-flex">
+  <div class="email-form d-flex align-items-center">
+      <input type="email" id="email" pattern=".+@globex\.com" size="30" placeholder="Enter your email address here" required>
+      <p type="submit" class="send mb-0">send <i class="fa-regular fa-paper-plane"></i></p>
+  </div>
+</div>
+<hr style="width: 400px;"> {% endcomment %}

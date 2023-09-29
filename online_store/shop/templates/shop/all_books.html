@@ -1,0 +1,22 @@
+{% extends 'shop/main.html' %}
+
+{% block content %}
+
+<section id="popular-books" class="d-flex align-items-center justify-content-between p-0">
+    <div class="container-fluid">
+        <div class="d-flex cards justify-content-between flex-direction-row flex-wrap all-books">
+            {% for book in books %}
+                <div class="book-card">
+                    <div class="card card-background">
+                        <img src="{{book.photo.url}}" alt="">
+                    </div>
+                    <p class="name-book mt-4">{{ book.title }}</p>
+                    <p class="author-book">{{ book.author }}</p>
+                    <p class="price">$ {{ book.price }}.00</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% endblock content %}
