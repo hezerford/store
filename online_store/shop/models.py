@@ -21,6 +21,7 @@ class Book(models.Model):
     time_update = models.DateTimeField(auto_now=True, verbose_name='Время изменения')
     is_published = models.BooleanField(default=True, verbose_name='Опубликовано да/нет')
     genre = models.ManyToManyField(Genre)
+    discounted_price = models.IntegerField(verbose_name='Цена со скидкой', blank=True, null=True)
 
     def __str__(self):
         return self.title

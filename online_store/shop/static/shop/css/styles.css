@@ -109,6 +109,14 @@ hr {
     margin-bottom: 75px;
 }
 
+.authorization-form {
+    display: flex;
+    flex-direction: column;
+    font-size: 22px;
+    margin-bottom: 10px;
+    color: #000; 
+}
+
 .read-more {
     font-family: 'Plus Jakarta Sans';
     font-style: normal;
@@ -487,6 +495,12 @@ hr {
     height: 31px;
 }
 
+.email-form {
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+}
+
 .send {
     font-family: 'Plus Jakarta Sans';
     font-style: normal;
@@ -570,4 +584,10 @@ h5 {
 
 .all-books {
     margin-top: 100px;
+}
+
+.authorization-title {
+    margin-top: 50px;
+    
+    padding-bottom: 30px;
 }

@@ -10,18 +10,24 @@ from .forms import *
 from .models import *
 from .utils import *
 
+from random import choice
+
 class BookHome(ListView):
     model = Book
     template_name = 'shop/main.html'
+
+    def QuoteRandom(request):
+        quotes = Quote.objects.all()
+        random_quote = choice(quotes)
+        return random_quote
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = 'Home'
         context['pop_books'] = Book.objects.all()[:8]
         context['feature_books'] = Book.objects.all()[:4]
-        context['quotes'] = Quote.objects.all()
+        context['random_quote'] = self.QuoteRandom()
         return context
-    
 
 class BookDetailView(DetailView):
     model = Book
@@ -31,6 +37,19 @@ class BookDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = 'Book'
+
+        book = self.object # Объект книги
+
+        if book.discounted_price:
+            old_price = book.price
+            discounted_price = book.discounted_price
+        else:
+            old_price = None
+            discounted_price = book.price
+
+        context['old_price'] = old_price
+        context['discounted_price'] = discounted_price
+
         return context
     
 class AllBooks(ListView):
@@ -66,6 +85,7 @@ class LoginUser(DataMixin, LoginView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Authorization'
+        context['username'] = self.request.user.username if self.request.user.is_authenticated else None
         return context
 
     def get_success_url(self):

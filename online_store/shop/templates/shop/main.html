@@ -29,7 +29,11 @@
                 <div class="navbar-collapse justify-content-end">
                     <ul class="navbar-nav mr-auto mb-3 mb-lg-0">
                         <li class="nav-item">
-                            <a href="{% url 'login' %}" class="nav-link"><i class="fa-regular fa-user"></i> Account</a>
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'account' %}" class="nav-link"><i class="fa-regular fa-user"></i> {{ user.username }}</a>
+                            {% else %}
+                                <a href="{% url 'login' %}" class="nav-link"><i class="fa-regular fa-user"></i> Account</a>
+                            {% endif %}
                         </li>
                         <li class="nav-item"><div class="vert-line"></div></li>
                         <li class="nav-item">
@@ -55,16 +59,13 @@
         
                 <ul class="nav nav-pills align-items-center">
                     <li class="nav-item">
-                        <a href="" class="nav-link menu-link p-0 me-5" aria-current="page">Home</a>
+                        <a href="/" class="nav-link menu-link p-0 me-5" aria-current="page">Home</a>
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link menu-link p-0 me-5">About</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link menu-link p-0 me-5">Pages</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link menu-link p-0 me-5">Shop</a>
+                        <a href="{% url 'all-books' %}" class="nav-link menu-link p-0 me-5">Books</a>
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link menu-link p-0 me-5">Articles</a>
@@ -226,8 +227,8 @@
                 <div class="sub-title text-center">Quote Of The Day</div>
                 <img style="margin-left: 49%;" src="{% static "shop/img/wave-line.svg" %}" alt="">
                 {% for quote in quotes %}
-                    <p class="quote mb-4">“{{ quote.quote }}“</p>
-                    <p class="quote-author">{{ quote.author_quote }}</p>
+                    <p class="quote mb-4">“{{ random_quote.quote }}“</p>
+                    <p class="quote-author">{{ random_quote.author_quote }}</p>
                 {% endfor %}
             </div>
         </div>
