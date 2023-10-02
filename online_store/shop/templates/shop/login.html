@@ -2,11 +2,11 @@
 
 {% block content %}
 
-<div class="container">
+<div class="container full-height">
   <div class="d-flex justify-content-center align-items-center flex-column">
     <h1 class='sub-title authorization-title'>Authorization</h1>
     <div class="email-form">
-      <form method="post">
+      <form method="post" style="width: 600px;">
         {% csrf_token %}
         <div class="form-error">{{ form.non_field_errors }}</div>
 
@@ -18,6 +18,9 @@
         {% endfor %}
         <button class="btn btn-dark btn-lg" style="align-items: center;" type="submit">Войти</button>
       </form>
+      <div class="d-flex">
+        <p>Нет аккаунта? </p><a href="{% url 'register' %}"> Зарегистрироваться</a>
+      </div>  
     </div>
   </div>
 </div>

@@ -1,12 +1,32 @@
 {% extends 'shop/main.html' %}
 
 {% block content %}
-<div class="d-flex justify-content-center align-items-center m-auto flex-column">
-    <h2 class="sub-title pt-5">Зарегистрируйтесь</h2>
-    <form class="pt-5" action="" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Зарегестрироваться</button>
-    </form>
+<div class="container full-height">
+    <div class="d-flex justify-content-center align-items-center flex-column">
+        <h2 class="sub-title pt-5">Register</h2>
+        <form class="pt-5" action="" method="post" style="width:600px;">
+            {% csrf_token %}
+            
+            <!-- Поле "Имя пользователя" -->
+            <div class="form-group description authorization-form">
+                <label for="{{ form.username.id_for_label }}">Имя пользователя:</label>
+                {{ form.username }}
+            </div>
+
+            <!-- Поле "Пароль" -->
+            <div class="form-group description authorization-form">
+                <label for="{{ form.password1.id_for_label }}">Пароль:</label>
+                {{ form.password1 }}
+            </div>
+
+            <!-- Поле "Подтверждение пароля" -->
+            <div class="form-group description authorization-form">
+                <label for="{{ form.password2.id_for_label }}">Подтверждение пароля:</label>
+                {{ form.password2 }}
+            </div>
+
+            <button class="btn btn-dark" type="submit">Регистрация</button>
+        </form>
+    </div>
 </div>
 {% endblock %}

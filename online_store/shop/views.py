@@ -5,6 +5,7 @@ from django.contrib.auth.views import LoginView
 from django.contrib import messages
 from django.views.generic import ListView, DetailView, CreateView
 from django.urls import reverse_lazy
+from django.views import View
 
 from .forms import *
 from .models import *
@@ -91,7 +92,8 @@ class LoginUser(DataMixin, LoginView):
     def get_success_url(self):
         return reverse_lazy('home')
 
-def logout(request):
-    if request.method == 'POST':
-        logout(request)
+class LogoutUser(View):
+    def get(self, request):
+        if request.user.is_authenticated:
+            logout(request)
         return redirect('home')

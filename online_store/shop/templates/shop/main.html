@@ -30,7 +30,7 @@
                     <ul class="navbar-nav mr-auto mb-3 mb-lg-0">
                         <li class="nav-item">
                             {% if user.is_authenticated %}
-                                <a href="{% url 'account' %}" class="nav-link"><i class="fa-regular fa-user"></i> {{ user.username }}</a>
+                                <a href="{% url 'logout' %}" class="nav-link"><i class="fa-regular fa-user"></i> {{ user.username }}</a>
                             {% else %}
                                 <a href="{% url 'login' %}" class="nav-link"><i class="fa-regular fa-user"></i> Account</a>
                             {% endif %}
@@ -226,10 +226,8 @@
             <div class="justify-content-center">
                 <div class="sub-title text-center">Quote Of The Day</div>
                 <img style="margin-left: 49%;" src="{% static "shop/img/wave-line.svg" %}" alt="">
-                {% for quote in quotes %}
-                    <p class="quote mb-4">“{{ random_quote.quote }}“</p>
-                    <p class="quote-author">{{ random_quote.author_quote }}</p>
-                {% endfor %}
+                <p class="quote mb-4">“{{ random_quote.quote }}“</p>
+                <p class="quote-author">{{ random_quote.author_quote }}</p>
             </div>
         </div>
     </section>
@@ -387,7 +385,7 @@
     <section id="all-right-reserved">
         <div class="container">
             <div class="d-flex justify-content-between">
-                <h3 class="all-rights-text">© 2021 Templates Jungle. All rights reserved.</h3>
+                <h3 class="all-rights-text">© 2023. All rights reserved.</h3>
                 <div class="socials">
                     <i class="fa-brands fa-facebook me-3"></i>
                     <i class="fa-brands fa-instagram me-3"></i>

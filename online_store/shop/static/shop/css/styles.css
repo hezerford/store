@@ -496,9 +496,7 @@ hr {
 }
 
 .email-form {
-    display: flex;
     justify-content: center;
-    height: 100vh;
 }
 
 .send {
@@ -590,4 +588,8 @@ h5 {
     margin-top: 50px;
     
     padding-bottom: 30px;
+}
+
+.full-height {
+    height: 100vh;
 }
