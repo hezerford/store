@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.views.generic import ListView, DetailView, CreateView
 from django.urls import reverse_lazy
 from django.views import View
+from django.db.models import Prefetch
 
 from .forms import *
 from .models import *
@@ -16,18 +17,29 @@ from random import choice
 class BookHome(ListView):
     model = Book
     template_name = 'shop/main.html'
-
-    def QuoteRandom(request):
-        quotes = Quote.objects.all()
-        random_quote = choice(quotes)
-        return random_quote
+    
+    # def get_most_sold_book(self):
+    #     most_sold_book = Book.objects.order_by('-sales_count').first()
+    #     return most_sold_book
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = 'Home'
-        context['pop_books'] = Book.objects.all()[:8]
-        context['feature_books'] = Book.objects.all()[:4]
-        context['random_quote'] = self.QuoteRandom()
+
+        books_with_related_data = Book.objects.only('title', 'description', 'price', 'photo', 'discounted_price').prefetch_related(
+            Prefetch('genre', queryset=Genre.objects.only('name')),
+        )
+
+        context['pop_books'] = books_with_related_data
+        context['feature_books'] = books_with_related_data[:4]
+
+        random_book = choice(books_with_related_data.only('title', 'description', 'price', 'photo', 'discounted_price'))
+        context['random_book'] = random_book
+
+        quotes = Quote.objects.all()
+        random_quote = choice(quotes)
+        context['random_quote'] = random_quote
+        # context['most_sold_book'] = self.get_most_sold_book()
         return context
 
 class BookDetailView(DetailView):
@@ -52,6 +64,15 @@ class BookDetailView(DetailView):
         context['discounted_price'] = discounted_price
 
         return context
+    
+    # def purchase_book(self):
+    #     book = self.get_object()
+    #     book.sales_count += 1
+    #     book.save()
+
+    #     # Логика обработки платежей и заказов
+
+    #     return redirect('home')
     
 class AllBooks(ListView):
     model = Book

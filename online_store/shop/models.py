@@ -22,6 +22,7 @@ class Book(models.Model):
     is_published = models.BooleanField(default=True, verbose_name='Опубликовано да/нет')
     genre = models.ManyToManyField(Genre)
     discounted_price = models.IntegerField(verbose_name='Цена со скидкой', blank=True, null=True)
+    # sales_count = models.PositiveIntegerField(default=0, verbose_name='Количество продаж')
 
     def __str__(self):
         return self.title
