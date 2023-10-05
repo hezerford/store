@@ -82,7 +82,8 @@
                 <div class="col-7">
                     <div class="name">{{ random_book.title }}</div>
                     <p class="description">{{ random_book.description }}</p>
-                    <button type="button" class="btn read-more">Read More ➜</button>
+                    <button type="button" class="btn read-more" 
+                    onclick="window.location.href='{% url 'book-detail' random_book.slug %}'">Read More ➜</button>
                     {% comment %} Пагинация {% endcomment %}
                     <nav>
                         <ul class="pagination">
@@ -130,14 +131,23 @@
             </div>
             <div class="d-flex cards justify-content-between flex-direction-row flex-nowrap">
                 {% for book in feature_books %}
+                <a class="text-decoration-none" href="{% url 'book-detail' book.slug %}">
                     <div class="book-card">
                         <div class="card card-background">
                             <img src="{{book.photo.url}}" alt="">
                         </div>
                         <p class="name-book mt-4">{{ book.title }}</p>
                         <p class="author-book">{{ book.author }}</p>
-                        <p class="price">$ {{ book.price }}.00</p>
+                        {% if book.discounted_price %}
+                            <div class="d-flex justify-content-center">
+                                <p class="price me-3 text-decoration-line-through">$ {{ book.price }}.00</p>
+                                <p class="price">$ {{ book.discounted_price }}.00</p>
+                            </div>
+                        {% else %}
+                            <p class="price">$ {{ book.price }}.00</p>
+                        {% endif %}
                     </div>
+                </a>
                 {% endfor %}
             </div>
             <hr>
@@ -218,7 +228,14 @@
                         </div>
                         <p class="name-book mt-4">{{ book.title }}</p>
                         <p class="author-book">{{ book.author }}</p>
-                        <p class="price">$ {{ book.price }}.00</p>
+                        {% if book.discounted_price %}
+                            <div class="d-flex justify-content-center">
+                                <p class="price me-3 text-decoration-line-through">$ {{ book.price }}.00</p>
+                                <p class="price">$ {{ book.discounted_price }}.00</p>
+                            </div>
+                        {% else %}
+                            <p class="price">$ {{ book.price }}.00</p>
+                        {% endif %}
                     </div>
                 {% endfor %}
             </div>

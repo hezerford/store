@@ -33,7 +33,7 @@ class BookHome(ListView):
         context['pop_books'] = books_with_related_data
         context['feature_books'] = books_with_related_data[:4]
 
-        random_book = choice(books_with_related_data.only('title', 'description', 'price', 'photo', 'discounted_price'))
+        random_book = choice(books_with_related_data)
         context['random_book'] = random_book
 
         quotes = Quote.objects.all()
@@ -46,6 +46,8 @@ class BookDetailView(DetailView):
     model = Book
     template_name = 'shop/book.html'
     context_object_name = 'book'
+    slug_field = 'slug'
+    slug_url_kwarg = 'book_slug'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -192,7 +192,11 @@ hr {
 }
 
 .book-card {
-    margin-right: 39px;
+    padding-left: 39px;
+}
+
+.book-card:first-child {
+    padding-left: 0px;
 }
 
 .cards {

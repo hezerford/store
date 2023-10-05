@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.utils.text import slugify
 
 class Genre(models.Model):
     name = models.CharField(max_length=200, verbose_name='Название жанра')
@@ -22,14 +23,15 @@ class Book(models.Model):
     is_published = models.BooleanField(default=True, verbose_name='Опубликовано да/нет')
     genre = models.ManyToManyField(Genre)
     discounted_price = models.IntegerField(verbose_name='Цена со скидкой', blank=True, null=True)
+    slug = models.SlugField(max_length=255, unique=True, db_index=True)
     # sales_count = models.PositiveIntegerField(default=0, verbose_name='Количество продаж')
 
     def __str__(self):
         return self.title
 
     def get_absolute_url(self):
-        return reverse("Book_detail", kwargs={"book_slug": self.slug})
-
+        return reverse("book-detail", kwargs={"book_slug": self.slug})
+    
     class Meta:
         verbose_name = 'Книги'
         verbose_name_plural = 'Книги'

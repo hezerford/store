@@ -6,6 +6,7 @@
     <div class="container-fluid">
         <div class="d-flex cards justify-content-between flex-direction-row flex-wrap all-books">
             {% for book in books %}
+            <a class="text-decoration-none" href="{% url 'book-detail' book.slug %}">
                 <div class="book-card">
                     <div class="card card-background">
                         <img src="{{book.photo.url}}" alt="">
@@ -14,6 +15,7 @@
                     <p class="author-book">{{ book.author }}</p>
                     <p class="price">$ {{ book.price }}.00</p>
                 </div>
+            </a>
             {% endfor %}
         </div>
     </div>

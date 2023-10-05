@@ -1,0 +1,38 @@
+{% extends 'shop/main.html' %}
+
+{% block content %}
+<div class="container mt-5 full-height">
+    <div class="row">
+        <div class="col d-flex justify-content-center">
+            <img src="{{ book.photo.url }}" alt="{{ book.title }}" class="img-fluid">
+        </div>
+        <div class="col">
+            <h1 class="best-book-title mb-3">{{ book.title }}</h1>
+            <img src="/static/shop/img/wave-line.svg" alt="">
+            <p class="best-selling-author mt-2">Author: {{ book.author }}</p>
+            {% if book.discounted_price %}
+                    <div class="d-flex">
+                        <p class="price mb-1 me-3">Price:</p>
+                        <p class="price mb-1 me-3 text-decoration-line-through">${{ book.price }}.00</p>
+                        <p class="price mb-1 font-weight-bold">$ {{ book.discounted_price }}.00</p>
+                    </div>
+            {% else %}
+                    <p class="price mb-1 text-start">Price: $ {{ book.price }}.00</p>
+            {% endif %}
+                <p class="description mb-0">{{ book.description }}</p>
+            {% if book.genre.all %}
+                <p class="description mb-5">Genres:
+                    {% for genre in book.genre.all %}
+                        <span class="description">{{ genre.name }}</span>
+                    {% endfor %}
+                </p>
+            {% endif %}
+            {% if book.is_published %}
+                <button class="btn btn-primary">Добавить в корзину</button>
+            {% else %}
+                <p class="text-danger">Извините, данная книга не доступна для покупки.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
