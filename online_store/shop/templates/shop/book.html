@@ -9,7 +9,7 @@
         <div class="col">
             <h1 class="best-book-title mb-3">{{ book.title }}</h1>
             <img src="/static/shop/img/wave-line.svg" alt="">
-            <p class="best-selling-author mt-2">Author: {{ book.author }}</p>
+            <p class="best-selling-author mt-2">By {{ book.author }}</p>
             {% if book.discounted_price %}
                     <div class="d-flex">
                         <p class="price mb-1 me-3">Price:</p>
@@ -28,9 +28,9 @@
                 </p>
             {% endif %}
             {% if book.is_published %}
-                <button class="btn btn-primary">Добавить в корзину</button>
+                <button class="btn btn-primary">Add to Cart</button>
             {% else %}
-                <p class="text-danger">Извините, данная книга не доступна для покупки.</p>
+                <p class="text-danger">Sorry, this book is not available for purchase.</p>
             {% endif %}
         </div>
     </div>

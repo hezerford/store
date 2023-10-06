@@ -16,3 +16,6 @@ class RegisterUserForm(UserCreationForm):
 class LoginUserForm(AuthenticationForm):
     username = forms.CharField(label='Логин', widget=forms.TextInput(attrs={'class': 'form-input'}))
     password = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
+
+class BookSearchForm(forms.Form):
+    query = forms.CharField(label='', max_length=100, widget=forms.TextInput(attrs={'placeholder': 'Book name'}))

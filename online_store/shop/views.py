@@ -25,6 +25,13 @@ class BookHome(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = 'Home'
+        context['form'] = BookSearchForm(self.request.GET)
+
+        query = self.request.GET.get('query')
+
+        if query:
+            books = Book.objects.filter(title__icontains=query)
+            context['books'] = books
 
         books_with_related_data = Book.objects.only('title', 'description', 'price', 'photo', 'discounted_price').prefetch_related(
             Prefetch('genre', queryset=Genre.objects.only('name')),
@@ -75,6 +82,17 @@ class BookDetailView(DetailView):
     #     # Логика обработки платежей и заказов
 
     #     return redirect('home')
+
+def BookSearchView(request):
+    form = BookSearchForm(request.GET)
+    books = []
+
+    if form.is_valid():
+        query = form.cleaned_data['query']
+        books = Book.objects.filter(title__icontains=query)
+    
+    context = {'form': form, 'books': books}
+    return render(request, 'shop/search_results.html', context)
     
 class AllBooks(ListView):
     model = Book

@@ -1,0 +1,30 @@
+{% extends "shop/main.html" %}
+
+{% block content %}
+    <section id="popular-books" class="d-flex align-items-center justify-content-between p-0">
+        <div class="container-fluid full-height">
+            {% if books %}
+            <div class="d-flex cards justify-content-between flex-direction-row flex-wrap all-books">
+                {% for book in books %}
+                <a class="text-decoration-none" href="{% url 'book-detail' book.slug %}">
+                    <div class="book-card">
+                        <div class="card card-background">
+                            <img src="{{book.photo.url}}" alt="">
+                        </div>
+                        <p class="name-book mt-4">{{ book.title }}</p>
+                        <p class="author-book">{{ book.author }}</p>
+                        <p class="price">$ {{ book.price }}.00</p>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}
+                <h1 class="best-book-title text-center pt-5 align-items-center">Books are not found</h1>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}
+
+
+
+

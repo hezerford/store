@@ -26,6 +26,16 @@
                     <i class="fa-brands fa-twitter me-3"></i>
                     <i class="fa-solid fa-b"></i>
                 </div>
+                <div class="d-flex justify-content-center align-items-center" style="padding-left: 33%;">
+                    <li class="nav-item d-flex justify-content-center" style="width: 300px;">
+                        <form method="get" action="{% url 'book-search' %}" style="width: 500px;" class="authorization-form flex-row" novalidate>
+                            {% csrf_token %}
+                            {{ form.query.label_tag }}
+                            <input class="form-control" type="text" name="query">
+                            <button class="btn" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        </form>
+                    </li>
+                </div>
                 <div class="navbar-collapse justify-content-end">
                     <ul class="navbar-nav mr-auto mb-3 mb-lg-0">
                         <li class="nav-item">
@@ -40,9 +50,6 @@
                             <a href="#" class="nav-link"><i class="fa-solid fa-cart-shopping"></i> Cart</a>
                         </li>
                         <li class="nav-item"><div class="vert-line"></div></li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link"><i class="fa-solid fa-magnifying-glass"></i> Search</a>
-                        </li>
                     </ul>
                 </div>
             </div>
