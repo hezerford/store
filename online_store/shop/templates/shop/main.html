@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Unicase:wght@700&family=Plus+Jakarta+Sans&family=Prata&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js">
     <link rel="stylesheet" href="{% static 'shop/css/styles.css' %}" type="text/css">
+    <link rel="icon" type="image/png" href="{% static 'shop/img/favicon.ico' %}" sizes="32x32" />
     <script src="https://kit.fontawesome.com/c8d82973fc.js" crossorigin="anonymous"></script>
     <title>{{ title }}</title>
 </head>
@@ -47,7 +48,7 @@
                         </li>
                         <li class="nav-item"><div class="vert-line"></div></li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link"><i class="fa-solid fa-cart-shopping"></i> Cart</a>
+                            <a href="{% url 'cart' %}" class="nav-link"><i class="fa-solid fa-cart-shopping"></i> Cart</a>
                         </li>
                         <li class="nav-item"><div class="vert-line"></div></li>
                     </ul>

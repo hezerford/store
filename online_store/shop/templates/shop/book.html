@@ -12,12 +12,11 @@
             <p class="best-selling-author mt-2">By {{ book.author }}</p>
             {% if book.discounted_price %}
                     <div class="d-flex">
-                        <p class="price mb-1 me-3">Price:</p>
-                        <p class="price mb-1 me-3 text-decoration-line-through">${{ book.price }}.00</p>
+                        <p class="price mb-1 me-3 text-decoration-line-through no-hover">${{ book.price }}.00</p>
                         <p class="price mb-1 font-weight-bold">$ {{ book.discounted_price }}.00</p>
                     </div>
             {% else %}
-                    <p class="price mb-1 text-start">Price: $ {{ book.price }}.00</p>
+                    <p class="price mb-1 text-start">$ {{ book.price }}.00</p>
             {% endif %}
                 <p class="description mb-0">{{ book.description }}</p>
             {% if book.genre.all %}
@@ -28,7 +27,19 @@
                 </p>
             {% endif %}
             {% if book.is_published %}
-                <button class="btn btn-primary">Add to Cart</button>
+            <div class="d-flex">
+                <form action="{% url 'add-to-cart' book.slug %}" method="post" class="me-3">
+                    {% csrf_token %}
+                    <button class="btn btn-primary">Add to cart</button>
+                </form>
+                
+                <form action="{% url 'remove-from-cart' book.slug %}" method="post">
+                    {% csrf_token %}
+                    {% if created %}
+                    <button class="btn btn-danger" type="submit">Remove from cart</button>
+                    {% endif %}
+                </form>
+            </div>
             {% else %}
                 <p class="text-danger">Sorry, this book is not available for purchase.</p>
             {% endif %}

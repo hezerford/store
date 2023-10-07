@@ -1,9 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView
 from django.contrib import messages
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, TemplateView
 from django.urls import reverse_lazy
 from django.views import View
 from django.db.models import Prefetch
@@ -72,6 +72,14 @@ class BookDetailView(DetailView):
         context['old_price'] = old_price
         context['discounted_price'] = discounted_price
 
+        # Корзина текущего пользователя
+        cart, created = Cart.objects.get_or_create(user=self.request.user)
+
+        # Есть ли книга в корзине
+        created = CartItem.objects.filter(cart=cart, book=book).exists()
+
+        context['created'] = created
+
         return context
     
     # def purchase_book(self):
@@ -93,7 +101,52 @@ def BookSearchView(request):
     
     context = {'form': form, 'books': books}
     return render(request, 'shop/search_results.html', context)
+
+class CartView(TemplateView):
+    template_name = 'shop/cart.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        cart = Cart.objects.get(user=self.request.user)
+        cart_items = CartItem.objects.filter(cart=cart)
+
+        total_price = 0
+
+        for cart_item in cart_items:
+            book = cart_item.book
+            if book.discounted_price:
+                total_price += book.discounted_price * cart_item.quantity
+            else:
+                total_price += book.price * cart_item.quantity
+
+        context["cart"] = cart
+        context["cart_items"] = cart_items
+        context["total_price"] = total_price
+        context["created"] = True
+        return context
     
+class AddToCartView(View):
+    def post(self, request, *args, **kwargs):
+        book = get_object_or_404(Book, slug=kwargs['book_slug'])
+
+        cart, created = Cart.objects.get_or_create(user=request.user) # Если объект существует,  он будет присвоен переменной cart, и created будет равно False, потому что объект был найден, но не создан. Если объекта не существовало, то он будет создан, присвоен переменной cart, и created будет равно True, потому что объект был создан.
+        cart_item, created = CartItem.objects.get_or_create(cart=cart, book=book) # Также как и выше
+
+        if not created:
+            cart_item.quantity += 1
+            cart_item.save()
+        
+        return redirect('cart')
+
+class RemoveFromCartView(View):
+    def post(self, request, *args, **kwargs):
+        book = get_object_or_404(Book, slug=kwargs['book_slug'])
+
+        cart = Cart.objects.get(user=request.user)
+        cart_item = CartItem.objects.get(cart=cart, book=book)
+        cart_item.delete()
+
+        return redirect('home')
 class AllBooks(ListView):
     model = Book
     template_name = 'shop/all_books.html'

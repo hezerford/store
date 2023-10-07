@@ -597,3 +597,13 @@ h5 {
 .full-height {
     height: 100vh;
 }
+
+.cart-price {
+    font-size: 28px;
+    transform: none;
+}
+
+.no-hover {
+    pointer-events: none;
+    cursor: default;
+}
