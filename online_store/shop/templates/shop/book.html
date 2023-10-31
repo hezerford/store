@@ -32,7 +32,6 @@
                     {% csrf_token %}
                     <button class="btn btn-primary">Add to cart</button>
                 </form>
-                
                 <form action="{% url 'remove-from-cart' book.slug %}" method="post">
                     {% csrf_token %}
                     {% if created %}

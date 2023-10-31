@@ -228,23 +228,27 @@
                     <a href="#" class="category">Fictional</a>
                 </div>
             </div>
-            <div class="d-flex cards justify-content-between flex-direction-row flex-wrap">
-                {% for book in pop_books %}
-                    <div>
-                        <div class="card card-background">
-                            <img src="{{book.photo.url}}" alt="">
-                        </div>
-                        <p class="name-book mt-4">{{ book.title }}</p>
-                        <p class="author-book">{{ book.author }}</p>
-                        {% if book.discounted_price %}
-                            <div class="d-flex justify-content-center">
-                                <p class="price me-3 text-decoration-line-through">$ {{ book.price }}.00</p>
-                                <p class="price">$ {{ book.discounted_price }}.00</p>
+            <div class="d-flex cards justify-content-between flex-direction-row flex-nowrap">
+                {% for book in all_books %}
+                    <a class="text-decoration-none" href="{% url 'book-detail' book.slug %}">
+                        <div class="book-card">
+                            <div class="card card-background">
+                                <img src="{{book.photo.url}}" alt="">
                             </div>
-                        {% else %}
-                            <p class="price">$ {{ book.price }}.00</p>
-                        {% endif %}
-                    </div>
+                            <p class="name-book mt-4">{{ book.title }}</p>
+                            <p class="author-book">{{ book.author }}</p>
+                            <div class="d-flex justify-content-center">
+                            {% if book.discounted_price %}
+                                <div class="d-flex">
+                                    <p class="price mb-5 me-3 text-decoration-line-through no-hover">${{ book.price }}.00</p>
+                                    <p class="price mb-5 font-weight-bold">$ {{ book.discounted_price }}.00</p>
+                                </div>
+                            {% else %}
+                                    <p class="price mb-5 text-start">$ {{ book.price }}.00</p>
+                            {% endif %}
+                            </div>
+                        </div>
+                    </a>
                 {% endfor %}
             </div>
             <hr style="width: 1420px; margin-bottom: 180px">
@@ -266,50 +270,23 @@
                 <hr class="hr-small">
             </div>
             <div class="d-flex cards justify-content-between flex-direction-row flex-nowrap">
-                <div class="carda">
-                    <div class="card card-background">
-                        <img src="{% static "shop/img/book2.png" %}" alt="">
-                    </div>
-                    <p class="name-book mt-4">Simple Way of Piece Life</p>
-                    <p class="author-book">Armor Ramsey</p>
-                    <div class="d-flex justify-content-center">
-                        <p class="price old"><del>$ 50.00</del></p>
-                        <p class="price new">$ 40.00</p>
-                    </div>
-                </div>
-                <div class="carda">
-                    <div class="card card-background">
-                        <img src="{% static "shop/img/book2.png" %}" alt="">
-                    </div>
-                    <p class="name-book mt-4">Great travel at desert</p>
-                    <p class="author-book">Sanchit Howdy</p>
-                    <div class="d-flex justify-content-center">
-                        <p class="price old"><del>$ 40.00</del></p>
-                        <p class="price new">$ 35.00</p>
-                    </div>
-                </div>
-                <div class="carda">
-                    <div class="card card-background">
-                        <img src="{% static "shop/img/book3.png" %}" alt="">
-                    </div>
-                    <p class="name-book mt-4">The lady beauty Scarlett</p>
-                    <p class="author-book">Arthur Doyle</p>
-                    <div class="d-flex justify-content-center">
-                        <p class="price old"><del>$ 45.00</del></p>
-                        <p class="price new">$ 36.00</p>
-                    </div>
-                </div>
-                <div class="carda">
-                    <div class="card card-background">
-                        <img src="{% static "shop/img/book4.png" %}" alt="">
-                    </div>
-                    <p class="name-book mt-4">Once upon a time</p>
-                    <p class="author-book">Klien Marry</p>
-                    <div class="d-flex justify-content-center">
-                        <p class="price old"><del>$ 45.00</del></p>
-                        <p class="price new">$ 32.00</p>
-                    </div>
-                </div>
+                {% for book in all_books %}
+                    {% if book.discounted_price %}
+                    <a class="text-decoration-none" href="{% url 'book-detail' book.slug %}">
+                        <div class="book-card">
+                            <div class="card card-background">
+                                <img src="{{book.photo.url}}" alt="">
+                            </div>
+                            <p class="name-book mt-4">{{ book.title }}</p>
+                            <p class="author-book">{{ book.author }}</p>
+                            <div class="d-flex justify-content-center">
+                                <p class="price me-3 text-decoration-line-through">$ {{ book.price }}.00</p>
+                                <p class="price no-hover">$ {{ book.discounted_price }}.00</p>
+                            </div>
+                        </div>
+                    </a>
+                    {% endif %}
+                {% endfor %}
             </div>
             <hr>
             <nav>
