@@ -12,10 +12,10 @@ class Genre(models.Model):
     class Meta:
         verbose_name = 'Жанр'
         verbose_name_plural = 'Жанры'
-
+    
 class Book(models.Model):
     title = models.CharField(max_length=75, verbose_name='Название книги')
-    description = models.TextField(max_length=750, verbose_name='Описание')
+    description = models.TextField(max_length=1500, verbose_name='Описание')
     author = models.CharField(max_length=50, verbose_name='Автор')
     price = models.IntegerField(verbose_name='Цена')
     photo = models.ImageField(upload_to="photos/%Y/%m/%d/", verbose_name='Фото')

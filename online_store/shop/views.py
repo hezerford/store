@@ -47,6 +47,10 @@ class BookHome(ListView):
             Prefetch('genre', queryset=Genre.objects.only('name')),
         )
 
+        discounted_books = [book for book in books_with_related_data if book.discounted_price is not None]
+
+        context['discounted_books'] = discounted_books
+
         context['pop_books'] = books_with_related_data
         context['feature_books'] = books_with_related_data[:4]
 
@@ -176,7 +180,8 @@ class RemoveFromCartView(View):
 
         cart = Cart.objects.get(user=request.user)
         cart_item = CartItem.objects.get(cart=cart, book=book)
-        cart_item.delete()
+        cart_item.quantity -= 1
+        cart_item.save()
 
         return redirect('home')
 class AllBooks(ListView):

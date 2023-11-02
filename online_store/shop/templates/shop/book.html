@@ -28,7 +28,7 @@
             {% endif %}
             {% if book.is_published %}
             <div class="d-flex">
-                <form action="{% url 'add-to-cart' book.slug %}" method="post" class="me-3">
+                <form action="{% if user.is_authenticated %} {% url 'add-to-cart' book.slug %} {% else %} {% url "login" %} {% endif %}" method="post" class="me-3">
                     {% csrf_token %}
                     <button class="btn btn-primary">Add to cart</button>
                 </form>
