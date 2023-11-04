@@ -1,8 +1,5 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
+from django.shortcuts import render
 from django.views.generic import ListView, DetailView, TemplateView
-from django.views import View
 from django.db.models import Prefetch
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -17,10 +14,6 @@ from random import choice
 class BookHome(ListView):
     model = Book
     template_name = 'shop/main.html'
-    
-    # def get_most_sold_book(self):
-    #     most_sold_book = Book.objects.order_by('-sales_count').first()
-    #     return most_sold_book
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -50,7 +43,6 @@ class BookHome(ListView):
         quotes = Quote.objects.all()
         random_quote = choice(quotes)
         context['random_quote'] = random_quote
-        # context['most_sold_book'] = self.get_most_sold_book()
         return context
 
 class BookDetailView(DetailView):
@@ -91,15 +83,6 @@ class BookDetailView(DetailView):
         context['created'] = created
 
         return context
-    
-    # def purchase_book(self):
-    #     book = self.get_object()
-    #     book.sales_count += 1
-    #     book.save()
-
-    #     # Логика обработки платежей и заказов
-
-    #     return redirect('home')
 
 def BookSearchView(request):
     form = BookSearchForm(request.GET)
@@ -121,8 +104,3 @@ class AllBooks(ListView):
         context["title"] = 'All Books'
         context['books'] = Book.objects.all()
         return context
-    
-class ProfileDetailView(LoginRequiredMixin, DetailView):
-    model = UserProfile
-    template_name = 'shop/view_profile.html'
-    context_object_name = 'user_profile'

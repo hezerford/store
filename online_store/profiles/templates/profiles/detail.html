@@ -1,0 +1,15 @@
+{% extends "shop/main.html" %}
+
+{% block content %}
+<div class="container full-height">
+    <div class="d-flex flex-column">
+    <h1 class='sub-title authorization-title'>Profile</h1>
+    <div class="text-start">
+        <p class="fs-5">First name: {{ user_profile.first_name }}</p>
+        <p class="fs-5">Last name: {{ user_profile.last_name }}</p>
+        <p class="fs-5">Address: {{ user_profile.address }}</p>
+        <p class="fs-5">Phone: {% if user_profile.phone_number %} {{ user_profile.phone_number }} {% endif %} </p>
+    </div>
+</div>
+
+{% endblock content %}

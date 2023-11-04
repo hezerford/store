@@ -3,16 +3,12 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, DetailView, TemplateView
 from django.views import View
-from django.db.models import Prefetch
-from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import *
 
-from random import choice
-
 @method_decorator(login_required, name='dispatch')
 class CartView(TemplateView):
-    template_name = 'shop/cart.html'
+    template_name = 'carts/cart.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -68,7 +64,10 @@ class RemoveFromCartView(View):
 
         cart = Cart.objects.get(user=request.user)
         cart_item = CartItem.objects.get(cart=cart, book=book)
-        cart_item.quantity -= 1
-        cart_item.save()
+        if cart_item.quantity > 1:
+            cart_item.quantity -= 1
+            cart_item.save()
+        else:
+            cart_item.delete()
 
         return redirect('home')

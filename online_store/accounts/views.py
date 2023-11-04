@@ -12,7 +12,7 @@ from accounts.forms import LoginUserForm, RegisterUserForm
 
 class RegisterUser(DataMixin, CreateView):
     form_class = RegisterUserForm
-    template_name = 'shop/register.html'
+    template_name = 'accounts/register.html'
     success_url = reverse_lazy('login')
 
     def get_context_data(self, **kwargs):
@@ -27,7 +27,7 @@ class RegisterUser(DataMixin, CreateView):
 
 class LoginUser(DataMixin, LoginView):
     form_class = LoginUserForm
-    template_name = 'shop/login.html'
+    template_name = 'accounts/login.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'api.apps.ApiConfig',
     'carts.apps.CartsConfig',
+    'profiles.apps.ProfilesConfig',
     'rest_framework',
     'django_filters',
     'phonenumber_field',

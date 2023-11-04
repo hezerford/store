@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import *
+from profiles.models import *
 
 class BookAdmin(admin.ModelAdmin):
     list_display = ('title', 'description', 'author', 'price', 'discounted_price', 'photo', 'is_published')
