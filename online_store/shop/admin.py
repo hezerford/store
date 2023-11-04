@@ -10,5 +10,6 @@ class BookAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title", )}
 
 admin.site.register(Book, BookAdmin)
+admin.site.register(UserProfile)
 admin.site.register(Genre)
 admin.site.register(Quote)

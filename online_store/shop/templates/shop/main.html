@@ -42,12 +42,20 @@
                     <ul class="navbar-nav mr-auto mb-3 mb-lg-0">
                         <li class="nav-item">
                             {% if user.is_authenticated %}
-                                <a href="{% url 'logout' %}" class="nav-link"><i class="fa-regular fa-user"></i> {{ user.username }}</a>
+                                <a href="{% url 'view_profile' user.id %}" class="nav-link">
+                                    <i class="fa-regular fa-user"></i> {{ user.username }}
+                                </a>
                             {% else %}
                                 <a href="{% url 'login' %}" class="nav-link"><i class="fa-regular fa-user"></i> Account</a>
                             {% endif %}
                         </li>
                         <li class="nav-item"><div class="vert-line"></div></li>
+                        {% if user.is_authenticated %}
+                            <li class="nav-item">
+                                <a href="{% url "logout" %}" class="nav-link"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a>
+                            </li>
+                            <li class="nav-item"><div class="vert-line"></div></li>
+                        {% endif %}
                         <li class="nav-item">
                             <a  
                                 href="{% if user.is_authenticated %} {% url 'cart' %} {% else %} {% url "login" %} {% endif %} " 

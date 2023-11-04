@@ -1,26 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth import login, logout
-from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from django.views.generic import ListView, DetailView, CreateView, TemplateView
-from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, TemplateView
 from django.views import View
 from django.db.models import Prefetch
+from django.contrib.auth.mixins import LoginRequiredMixin
 
+from carts.models import Cart, CartItem
 
-from django_filters import rest_framework as filters
-
-from rest_framework import generics
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-
-from .filters import BookFilter
 from .forms import *
 from .models import *
 from .utils import *
-from .serializers import BookSerializer, BookDetailSerializer
 
 from random import choice
 
@@ -122,68 +112,6 @@ def BookSearchView(request):
     context = {'form': form, 'books': books}
     return render(request, 'shop/search_results.html', context)
 
-@method_decorator(login_required, name='dispatch')
-class CartView(TemplateView):
-    template_name = 'shop/cart.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        user = self.request.user
-        cart = None  # Инициализируем cart как None
-
-        if user.is_authenticated:  # Проверяем, аутентифицирован ли пользователь
-            cart, created = Cart.objects.get_or_create(user=user)
-        else:  # Если пользователь анонимный
-            session_cart_id = self.request.session.get('cart_id')
-            if session_cart_id:
-                cart, created = Cart.objects.get_or_create(id=session_cart_id)
-            else:
-                cart = Cart.objects.create()
-                self.request.session['cart_id'] = cart.id
-
-        cart_items = CartItem.objects.filter(cart=cart)
-        total_price = 0
-
-        for cart_item in cart_items:
-            book = cart_item.book
-            if book.discounted_price:
-                total_price += book.discounted_price * cart_item.quantity
-            else:
-                total_price += book.price * cart_item.quantity
-
-        context["cart"] = cart
-        context["cart_items"] = cart_items
-        context["total_price"] = total_price
-        context["created"] = created
-        return context
-    
-class AddToCartView(View):
-    def post(self, request, *args, **kwargs):
-        book = get_object_or_404(Book, slug=kwargs['book_slug'])
-
-        if self.request.user.is_authenticated:
-            cart, created = Cart.objects.get_or_create(user=self.request.user) # Если объект существует,  он будет присвоен переменной cart, и created будет равно False, потому что объект был найден, но не создан. Если объекта не существовало, то он будет создан, присвоен переменной cart, и created будет равно True, потому что объект был создан.
-        else:
-            cart, created = Cart.objects.get_or_create(user=None)
-
-        cart_item, created = CartItem.objects.get_or_create(cart=cart, book=book) # Также как и выше
-
-        if not created:
-            cart_item.quantity += 1
-            cart_item.save()
-        
-        return redirect('cart')
-
-class RemoveFromCartView(View):
-    def post(self, request, *args, **kwargs):
-        book = get_object_or_404(Book, slug=kwargs['book_slug'])
-
-        cart = Cart.objects.get(user=request.user)
-        cart_item = CartItem.objects.get(cart=cart, book=book)
-        cart_item.quantity -= 1
-        cart_item.save()
-
-        return redirect('home')
 class AllBooks(ListView):
     model = Book
     template_name = 'shop/all_books.html'
@@ -194,59 +122,7 @@ class AllBooks(ListView):
         context['books'] = Book.objects.all()
         return context
     
-
-class RegisterUser(DataMixin, CreateView):
-    form_class = RegisterUserForm
-    template_name = 'shop/register.html'
-    success_url = reverse_lazy('login')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Register'
-        return context
-
-    def form_valid(self, form):
-        user = form.save()
-        login(self.request, user)
-        return redirect('home')
-
-class LoginUser(DataMixin, LoginView):
-    form_class = LoginUserForm
-    template_name = 'shop/login.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Authorization'
-        context['username'] = self.request.user.username if self.request.user.is_authenticated else None
-        return context
-
-    def get_success_url(self):
-        return reverse_lazy('home')
-
-class LogoutUser(View):
-    def get(self, request):
-        if request.user.is_authenticated:
-            logout(request)
-        return redirect('home')
-    
-class AllBooksAPI(generics.ListAPIView):
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
-    permission_classes = [IsAuthenticated]  
-
-class BookDetailAPIView(generics.RetrieveAPIView):
-    queryset = Book.objects.all()
-    serializer_class = BookDetailSerializer
-    permission_classes = [IsAuthenticated]
-
-class DiscountedBookListView(generics.ListAPIView):
-    queryset = Book.objects.filter(discounted_price__isnull=False)
-    serializer_class = BookSerializer
-    permission_classes = [IsAuthenticated]
-
-class BookSearchAPI(generics.ListAPIView):
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
-    filter_backends = (filters.DjangoFilterBackend,)
-    filterset_class = BookFilter
-    permission_classes = [IsAuthenticated]
+class ProfileDetailView(LoginRequiredMixin, DetailView):
+    model = UserProfile
+    template_name = 'shop/view_profile.html'
+    context_object_name = 'user_profile'
