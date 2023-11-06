@@ -1,14 +1,32 @@
 {% extends "shop/main.html" %}
+{% load static %}
 
 {% block content %}
 <div class="container full-height">
     <div class="d-flex flex-column">
-    <h1 class='sub-title authorization-title'>Profile</h1>
-    <div class="text-start">
-        <p class="fs-5">First name: {{ user_profile.first_name }}</p>
-        <p class="fs-5">Last name: {{ user_profile.last_name }}</p>
-        <p class="fs-5">Address: {{ user_profile.address }}</p>
-        <p class="fs-5">Phone: {% if user_profile.phone_number %} {{ user_profile.phone_number }} {% endif %} </p>
+        <div class="d-flex align-items-center justify-content-between">
+            <hr class="hr-small">
+            <h1 class='sub-title authorization-title fs-1'>Profile {{ user.username }}</h1>
+            <hr class="hr-small">
+        </div>
+    <div class="row mt-5">
+        <div class="col d-flex justify-content-center">
+            {% if user_profile.profile_picture %}
+                <img class="profile_picture" src="{{ user_profile.profile_picture.url }}" alt="Profile Picture">
+            {% else %}
+                <img class="profile_picture" src="{% static "profiles/img/default_profile.png" %}" alt="Default Profile Picture">
+            {% endif %}
+        </div>
+        <div class="col d-flex">
+            <div class="text-start">
+                <p class="fs-5">First name: {{ user_profile.first_name }}</p>
+                <p class="fs-5">Last name: {{ user_profile.last_name }}</p>
+                <p class="fs-5">Address: {{ user_profile.address }}</p>
+                <p class="fs-5 mb-5">Phone: {% if user_profile.phone_number %} {{ user_profile.phone_number }} {% endif %} </p>
+                <button type="button" class="btn read-more mb-0 mt-5" 
+                    onclick="window.location.href='{% url 'profile-update' user.id %}'">Edit Profile</button>
+            </div>
+        </div>
     </div>
 </div>
 

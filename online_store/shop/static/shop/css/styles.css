@@ -5,6 +5,14 @@
     font-size: 16px;
 }
 
+a {
+    color: #000;
+}
+
+a:hover {
+    color: #fff;
+}
+
 body {
     scroll-behavior: smooth;
 }
@@ -613,4 +621,12 @@ h5 {
 .no-hover {
     pointer-events: none;
     cursor: default;
+}
+
+.profile-btn {
+    color: #000;
+}
+
+.profile-btn:hover {
+    color: #fff;
 }
