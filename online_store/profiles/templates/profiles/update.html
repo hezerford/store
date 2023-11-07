@@ -11,7 +11,7 @@
         </div>
     <div class="row mt-5">
         <div class="col d-flex justify-content-center profile_picture">
-            {% if user_profile.profile_picture %}
+            {% if user_profile.profile_picture and user_profile.profile_picture.url %}
                 <img class="profile_picture w-100" src="{{ user_profile.profile_picture.url }}" alt="Profile Picture">
             {% else %}
                 <img src="{% static "profiles/img/default_profile.png" %}" alt="Default Profile Picture">

@@ -1,6 +1,8 @@
 import profile
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
+
 from django.views.generic import TemplateView, UpdateView
 from django.urls import reverse, reverse_lazy
 
@@ -13,7 +15,9 @@ class ProfileDetailView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        user_profile = UserProfile.objects.get(user=self.request.user)
+        username = self.kwargs['username']
+        user = User.objects.get(username=username)
+        user_profile = UserProfile.objects.get(user=user)
         context["user_profile"] = user_profile
         return context
     
@@ -25,11 +29,13 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     success_url = '/profile/'
 
     def get_object(self, queryset=None):
-        return self.request.user.userprofile
+        username = self.kwargs['username']
+        user = User.objects.get(username=username)
+        return self.request.user.userprofile # Обращаемся к текущему пользователю
 
     def get_success_url(self):
-        user_id = self.request.user.id
-        return reverse('profile-detail', args=[user_id])
+        username = self.request.user.username
+        return reverse('profile-detail', kwargs={'username': self.request.user.username})
     
     def form_valid(self, form):
         profile_picture = self.request.FILES.get('profile_picture')
@@ -42,7 +48,6 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
                 # Удалить фотографию профиля и установить значение profile_picture в None
                 user_profile.profile_picture.delete()
                 user_profile.profile_picture = None
-                user_profile.save()
-                messages.success(self.request, "Profile picture has been reset to default.")
+                user_profile.save()  # Сохраняем модель профиля
 
         return super().form_valid(form)
