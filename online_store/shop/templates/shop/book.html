@@ -27,20 +27,31 @@
                 </p>
             {% endif %}
             {% if book.is_published %}
-            <div class="d-flex">
-                <form action="{% if user.is_authenticated %} {% url 'add-to-cart' book.slug %} {% else %} {% url "login" %} {% endif %}" method="post" class="me-3">
-                    {% csrf_token %}
-                    <button class="btn btn-primary">Add to cart</button>
-                </form>
-                <form action="{% url 'remove-from-cart' book.slug %}" method="post">
-                    {% csrf_token %}
-                    {% if created %}
-                    <button class="btn btn-danger" type="submit">Remove from cart</button>
+                <div class="d-flex">
+                    <form action="{% if user.is_authenticated %} {% url 'add-to-cart' book.slug %} {% else %} {% url "login" %} {% endif %}" method="post" class="me-3">
+                        {% csrf_token %}
+                        <button class="btn btn-primary">Add to cart</button>
+                    </form>
+                    <form action="{% url 'remove-from-cart' book.slug %}" method="post" class="me-3">
+                        {% csrf_token %}
+                        {% if created %}
+                        <button class="btn btn-danger" type="submit">Remove from cart</button>
+                        {% endif %}
+                    </form>
+                {% if user.is_authenticated %}
+                    {% if book_in_favorites %}
+                        <form method="post" action="{% url 'remove-from-favorites' book_slug=book.slug %}">
+                            {% csrf_token %}
+                            <button class="btn btn-secondary" type="submit">Remove from favorites</button>
+                        </form>
+                    {% else %}
+                        <form method="post" action="{% url 'add-to-favorites' book_slug=book.slug %}">
+                            {% csrf_token %}
+                            <button class="btn btn-warning" type="submit">Add to Favorites</button>
+                        </form>
                     {% endif %}
-                </form>
-            </div>
-            {% else %}
-                <p class="text-danger">Sorry, this book is not available for purchase.</p>
+                </div>
+                {% endif %}
             {% endif %}
         </div>
     </div>

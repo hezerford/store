@@ -6,26 +6,16 @@
         <h2 class="sub-title pt-5">Register</h2>
         <form class="pt-5" action="" method="post" style="width:600px;">
             {% csrf_token %}
-            
-            <!-- Поле "Имя пользователя" -->
-            <div class="form-group description authorization-form">
-                <label for="{{ form.username.id_for_label }}">Имя пользователя:</label>
-                {{ form.username }}
-            </div>
+            <div class="form-error authorization-form fs-5">{{ form.non_field_errors }}</div>
 
-            <!-- Поле "Пароль" -->
-            <div class="form-group description authorization-form">
-                <label for="{{ form.password1.id_for_label }}">Пароль:</label>
-                {{ form.password1 }}
-            </div>
+            {% for f in form %}
+                <p class="authorization-form fs-5">
+                    <label for="{{ f.id_for_label }}" class="email authorization-form fs-5">{{f.label}}</label>{{f}}
+                </p>
+                <div class="form-error authorization-form fs-5">{{f.errors}}</div>
+            {% endfor %}
 
-            <!-- Поле "Подтверждение пароля" -->
-            <div class="form-group description authorization-form">
-                <label for="{{ form.password2.id_for_label }}">Подтверждение пароля:</label>
-                {{ form.password2 }}
-            </div>
-
-            <button class="btn btn-dark" type="submit">Регистрация</button>
+            <button class="btn btn-dark btn-lg" style="margin: 0 auto; align-items: center;" type="submit">Register</button>
         </form>
     </div>
 </div>

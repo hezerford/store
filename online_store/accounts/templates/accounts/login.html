@@ -8,18 +8,18 @@
     <div class="email-form">
       <form method="post" style="width: 600px;">
         {% csrf_token %}
-        <div class="form-error">{{ form.non_field_errors }}</div>
+        <div class="form-error authorization-form fs-5">{{ form.non_field_errors }}</div>
 
         {% for f in form %}
-          <p class="description authorization-form">
-            <label for="{{ f.id_for_label }}" class="email">{{f.label}}</label>{{f}}
+          <p class="authorization-form fs-5">
+            <label for="{{ f.id_for_label }}" class="email authorization-form fs-5">{{f.label}}</label>{{f}}
           </p>
-          <div class="form-error">{{f.errors}}</div>
+          <div class="form-error authorization-form fs-5">{{f.errors}}</div>
         {% endfor %}
-        <button class="btn btn-dark btn-lg" style="align-items: center;" type="submit">Войти</button>
+        <button class="btn btn-dark btn-lg" style="align-items: center;" type="submit">Login</button>
       </form>
-      <div class="d-flex">
-        <p>Нет аккаунта? </p><a href="{% url 'register' %}"> Зарегистрироваться</a>
+      <div class="d-flex mt-2">
+        <p class="authorization-form fs-5 me-1">Haven't account? </p><a class="authorization-form fs-5" href="{% url 'register' %}">  Register</a>
       </div>  
     </div>
   </div>
