@@ -1,29 +1,19 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
-from django.views.generic import ListView, DetailView, TemplateView
+from django.shortcuts import redirect, get_object_or_404
+from django.views.generic import TemplateView
 from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import *
 
-@method_decorator(login_required, name='dispatch')
-class CartView(TemplateView):
+class CartView(LoginRequiredMixin, TemplateView):
     template_name = 'carts/cart.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
-        cart = None  # Инициализируем cart как None
+        cart = None  # Инициализируем корзину как None
 
-        if user.is_authenticated:  # Проверяем, аутентифицирован ли пользователь
-            cart, created = Cart.objects.get_or_create(user=user)
-        else:  # Если пользователь анонимный
-            session_cart_id = self.request.session.get('cart_id')
-            if session_cart_id:
-                cart, created = Cart.objects.get_or_create(id=session_cart_id)
-            else:
-                cart = Cart.objects.create()
-                self.request.session['cart_id'] = cart.id
+        cart, created = Cart.objects.get_or_create(user=user)
 
         cart_items = CartItem.objects.filter(cart=cart)
         total_price = 0
@@ -52,6 +42,8 @@ class AddToCartView(View):
 
         cart_item, created = CartItem.objects.get_or_create(cart=cart, book=book) # Также как и выше
 
+
+        # если в корзине уже есть книга данного экземпляра, то она не создается, а прибавляется в кол-ве
         if not created:
             cart_item.quantity += 1
             cart_item.save()

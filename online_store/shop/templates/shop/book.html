@@ -20,9 +20,9 @@
             {% endif %}
                 <p class="description mb-0">{{ book.description }}</p>
             {% if book.genre.all %}
-                <p class="description mb-5">Genres:
+                <p class="description text-dark mb-5">Genres:
                     {% for genre in book.genre.all %}
-                        <span class="description">{{ genre.name }}</span>
+                        <span class="description text-dark">{{ genre.name }}{% if not forloop.last %},{% endif %}</span>
                     {% endfor %}
                 </p>
             {% endif %}

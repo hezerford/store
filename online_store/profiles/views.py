@@ -1,5 +1,3 @@
-import profile
-from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 
@@ -28,13 +26,12 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     form_class = UserProfileForm
     success_url = '/profile/'
 
+    # Возвращаем представлению профиль связанный с ТЕКУЩИМ пользователем
     def get_object(self, queryset=None):
-        username = self.kwargs['username']
-        user = User.objects.get(username=username)
-        return self.request.user.userprofile # Обращаемся к текущему пользователю
+        return self.request.user.userprofile
 
+    # Определяем URL, куда перенаправлен будет пользователь после успешного обновления профиля
     def get_success_url(self):
-        username = self.request.user.username
         return reverse('profile-detail', kwargs={'username': self.request.user.username})
     
     def form_valid(self, form):

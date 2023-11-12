@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
-from django.views.generic import ListView, DetailView, TemplateView
+from django.views.generic import ListView, DetailView, FormView
 from django.db.models import Prefetch
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -23,6 +23,7 @@ class BookHome(ListView):
 
         query = self.request.GET.get('query')
 
+        # Поиск книг по частичному совпадению с заголовком
         if query:
             books = Book.objects.filter(title__icontains=query)
             context['books'] = books
@@ -72,7 +73,12 @@ class BookDetailView(DetailView):
         if self.request.user.is_authenticated:
             # Создаем форму для управления избранными книгами
             user_profile = self.request.user.userprofile
+
+            # Создается экземпляр формы FavoriteBooksForm с предварительно заполненными данными (initial)
+            # т.е. когда пользователь переходит на страницу с книгой, автоматические берется id книги и вставляется в форму
+            # и далее instance связывает форму с существующим экземпляром модели user_profile
             form = FavoriteBooksForm(instance=user_profile, initial={'favorite_books': [book.id]})
+
             context['favorite_books_form'] = form
 
             # Есть ли книга в избранном у пользователя
@@ -81,7 +87,7 @@ class BookDetailView(DetailView):
             # Корзина текущего аутентифицированного пользователя
             cart, created = Cart.objects.get_or_create(user=self.request.user)
 
-            # Проверить, есть ли книга в корзине
+            # Проверить, есть ли книга в корзине (если один или несколько объектов True, иначе False)
             created = CartItem.objects.filter(cart=cart, book=book).exists()
         else:
             # Для анонимных пользователей, устанавливаем cart в None и created в False
@@ -95,7 +101,9 @@ class BookDetailView(DetailView):
 
         return context
     
-class AddToFavoritesView(View):
+class AddToFavoritesView(LoginRequiredMixin, View):
+    login_url = '/login/'
+
     def post(self, request, book_slug):
         book = Book.objects.get(slug=book_slug)
         user_profile = request.user.userprofile
@@ -103,7 +111,6 @@ class AddToFavoritesView(View):
         # Проверяем что книга не в избранном
         if book not in user_profile.favorite_books.all():
             user_profile.favorite_books.add(book)
-            user_profile.save()
         
         return redirect('book-detail', book_slug=book_slug)
 
@@ -119,17 +126,16 @@ class RemoveFromFavoritesView(LoginRequiredMixin, View):
         
         return redirect('book-detail', book_slug=book_slug)
 
-def BookSearchView(request):
-    form = BookSearchForm(request.GET)
-    books = []
+class BookSearchView(View):
+    template_name = 'shop/search_results.html'
 
-    if form.is_valid():
-        query = form.cleaned_data['query']
-        books = Book.objects.filter(title__icontains=query)
-    
-    context = {'form': form, 'books': books}
-    return render(request, 'shop/search_results.html', context)
+    def get(self, request, *args, **kwargs):
+        form = BookSearchForm(request.GET)
+        query = request.GET.get('query')
+        books = Book.objects.filter(title__icontains=query) if query else []
 
+        context = {'form': form, 'books': books}
+        return render(request, self.template_name, context)
 class AllBooks(ListView):
     model = Book
     template_name = 'shop/all_books.html'
