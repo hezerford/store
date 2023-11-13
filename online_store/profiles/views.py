@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 
 from django.views.generic import TemplateView, UpdateView
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
 
 from profiles.forms import UserProfileForm
 from .models import UserProfile

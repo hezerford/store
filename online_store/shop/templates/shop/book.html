@@ -20,11 +20,14 @@
             {% endif %}
                 <p class="description mb-0">{{ book.description }}</p>
             {% if book.genre.all %}
-                <p class="description text-dark mb-5">Genres:
+                <p class="description text-dark mb-0">Genres:
                     {% for genre in book.genre.all %}
                         <span class="description text-dark">{{ genre.name }}{% if not forloop.last %},{% endif %}</span>
                     {% endfor %}
                 </p>
+            {% endif %}
+            {% if in_cart %}
+                <p class="description mb-5 text-dark">Quantity in cart: {{ cart_item.quantity }}</p>
             {% endif %}
             {% if book.is_published %}
                 <div class="d-flex">

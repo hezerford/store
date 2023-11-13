@@ -1,7 +1,5 @@
-from django.conf import settings
-from django.conf.urls.static import static
 from django.urls import path
-from .views import *
+from .views import ProfileDetailView, ProfileUpdateView
 
 urlpatterns = [
     path('profile/<str:username>', ProfileDetailView.as_view(), name='profile-detail'),

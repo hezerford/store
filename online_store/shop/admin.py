@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import *
-from profiles.models import *
+from .models import Book, Genre, Quote
 
 class BookAdmin(admin.ModelAdmin):
     list_display = ('title', 'description', 'author', 'price', 'discounted_price', 'photo', 'is_published')
@@ -11,6 +10,15 @@ class BookAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title", )}
 
 admin.site.register(Book, BookAdmin)
-admin.site.register(UserProfile)
-admin.site.register(Genre)
-admin.site.register(Quote)
+
+class GenreAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    search_fields = ('name',)
+
+admin.site.register(Genre, GenreAdmin)
+
+class QuoteAdmin(admin.ModelAdmin):
+    list_display = ('quote', 'author_quote')
+    search_fields = ('quote', 'author_quote')
+
+admin.site.register(Quote, QuoteAdmin)

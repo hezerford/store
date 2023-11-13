@@ -1,7 +1,7 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import ListView, DetailView, CreateView, TemplateView
+from django.views.generic import CreateView
 from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView
 

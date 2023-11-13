@@ -1,13 +1,13 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
-from django.views.generic import ListView, DetailView, FormView
+from django.views.generic import ListView, DetailView
 from django.db.models import Prefetch
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from carts.models import Cart, CartItem
 
-from .forms import *
-from .models import *
+from .forms import BookSearchForm, FavoriteBooksForm
+from .models import Book, Genre, Quote
 from .utils import *
 
 from random import choice
@@ -98,6 +98,14 @@ class BookDetailView(DetailView):
         context['cart'] = cart
         context['created'] = created
         context['book_in_favorites'] = book_in_favorites
+
+        in_cart = cart.items.filter(pk=book.id).exists()
+        if in_cart:
+            # Если книга в корзине, добавим объект CartItem в контекст
+            cart_item = CartItem.objects.get(cart=cart, book=book)
+            context['cart_item'] = cart_item
+
+        context['in_cart'] = in_cart
 
         return context
     

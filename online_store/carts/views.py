@@ -42,7 +42,6 @@ class AddToCartView(View):
 
         cart_item, created = CartItem.objects.get_or_create(cart=cart, book=book) # Также как и выше
 
-
         # если в корзине уже есть книга данного экземпляра, то она не создается, а прибавляется в кол-ве
         if not created:
             cart_item.quantity += 1

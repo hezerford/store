@@ -1,6 +1,5 @@
 from django import forms
 from profiles.models import UserProfile
-from shop.models import Book
 
 class UserProfileForm(forms.ModelForm):
     class Meta:
