@@ -6,8 +6,9 @@ from shop.models import Book
 def user_profile_path(instance, filename):
     return f"profile_pictures/{instance.user.username}/{filename}"
 
+
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, unique=True)
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=50, blank=True)
     address = models.CharField(max_length=255, blank=True)

@@ -1,5 +1,7 @@
 from pathlib import Path
 import os
+import sys
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -9,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-80^-kvfj0ocs&b65^$_9u69=7wq2d363bc-ff7p14=osnt_-$1'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -70,7 +72,7 @@ WSGI_APPLICATION = 'online_store.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-from decouple import config
+
 
 DATABASES = {
     'default': {
@@ -80,6 +82,14 @@ DATABASES = {
         'PASSWORD': config('DB_PASSWORD'),
         'HOST': config('DB_HOST'),
         'PORT': config('DB_PORT'),
+    },
+    'test': {
+        'ENGINE': config('DB_TEST_ENGINE'),
+        'NAME': config('DB_TEST_NAME'),
+        'USER': config('DB_TEST_USER'),
+        'PASSWORD': config('DB_TEST_PASSWORD'),
+        'HOST': config('DB_TEST_HOST'),
+        'PORT': config('DB_TEST_PORT'),
     }
 }
 

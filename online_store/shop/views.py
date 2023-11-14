@@ -6,7 +6,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from carts.models import Cart, CartItem
 
-from .forms import BookSearchForm, FavoriteBooksForm
+from profiles.forms import FavoriteBooksForm
+
+from .forms import BookSearchForm
 from .models import Book, Genre, Quote
 from .utils import *
 
@@ -89,6 +91,13 @@ class BookDetailView(DetailView):
 
             # Проверить, есть ли книга в корзине (если один или несколько объектов True, иначе False)
             created = CartItem.objects.filter(cart=cart, book=book).exists()
+            in_cart = cart.items.filter(pk=book.id).exists()
+            if in_cart:
+                # Если книга в корзине, добавим объект CartItem в контекст
+                cart_item = CartItem.objects.get(cart=cart, book=book)
+                context['cart_item'] = cart_item
+
+            context['in_cart'] = in_cart
         else:
             # Для анонимных пользователей, устанавливаем cart в None и created в False
             cart = None
@@ -99,13 +108,7 @@ class BookDetailView(DetailView):
         context['created'] = created
         context['book_in_favorites'] = book_in_favorites
 
-        in_cart = cart.items.filter(pk=book.id).exists()
-        if in_cart:
-            # Если книга в корзине, добавим объект CartItem в контекст
-            cart_item = CartItem.objects.get(cart=cart, book=book)
-            context['cart_item'] = cart_item
-
-        context['in_cart'] = in_cart
+        
 
         return context
     

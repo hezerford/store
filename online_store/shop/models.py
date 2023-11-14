@@ -1,3 +1,4 @@
+from tabnanny import verbose
 from django.db import models
 from django.urls import reverse
 from django.db.models.signals import post_save
@@ -50,7 +51,7 @@ class Quote(models.Model):
         verbose_name_plural = 'Цитаты'
 
 class Email(models.Model):
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=True, verbose_name='Email')
 
     def __str__(self):
         return self.email
