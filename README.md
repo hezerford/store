@@ -70,6 +70,7 @@ BookStore - это веб-приложение для продажи книг, �
 - Django Rest Framework
 - HTML/CSS
 - Bootstrap
+- Pytest
 
 ## Автор
 

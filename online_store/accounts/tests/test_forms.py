@@ -1,5 +1,6 @@
-from django.test import Client
 import pytest
+from django.test import Client
+from django.urls import reverse
 from django.contrib.auth.models import User
 from accounts.forms import RegisterUserForm, LoginUserForm
 
@@ -38,7 +39,8 @@ def test_succcesful_login():
     assert logged_in is True
 
     # Проверка что мы залогинены
-    response = client.get('http://127.0.0.1:8000/cart/')
+    url = reverse('cart')
+    response = client.get(url)
     assert response.status_code == 200
     assert '_auth_user_id' in client.session
 
