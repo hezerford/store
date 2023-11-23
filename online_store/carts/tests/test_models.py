@@ -25,13 +25,13 @@ def create_cart(create_user):
     
     return _create_cart
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 def test_create_cart(create_cart):
     cart = create_cart()
     assert Cart.objects.count() == 1
     assert cart.user is not None
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 def test_add_book_to_cart(create_cart, create_book):
     cart = create_cart()
     book = create_book()
@@ -43,7 +43,7 @@ def test_add_book_to_cart(create_cart, create_book):
     assert cart_item.book == book
     assert cart_item.quantity == 1
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 def test_add_duplicate_book_to_cart(create_cart, create_book):
     cart = create_cart()
     book = create_book()

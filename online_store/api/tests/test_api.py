@@ -19,7 +19,7 @@ def authenticated_client():
     client.force_authenticate(user=user)
     return client
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 def test_all_books_api(authenticated_client, create_book):
     # Создаем хотя бы одну книгу для тестирования
     create_book()
@@ -43,7 +43,7 @@ def test_all_books_api(authenticated_client, create_book):
     assert 'price' in first_book
 
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 def test_book_detail_api(authenticated_client, create_book):
     book = create_book()
     url = reverse('book-detail-api', kwargs={'pk': book.pk})
@@ -56,7 +56,7 @@ def test_book_detail_api(authenticated_client, create_book):
     assert 'genre' in response.data
     assert 'price' in response.data
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 def test_discounted_book_list_api(authenticated_client, create_book):
     # Создаем несколько книг, некоторые из которых имеют скидочные цены
     create_book(title='Book1',description='Book1 Description', author='Book1 Author', price=20.0, discounted_price=15.0, is_published=True, slug='book1')
@@ -71,7 +71,7 @@ def test_discounted_book_list_api(authenticated_client, create_book):
     assert len(response.data) == 2  # ожидаем две книги с скидочными ценами
 
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 def test_book_search_api(authenticated_client, create_book):
     # Создаем несколько книг для тестирования поиска
     create_book(title='Python Book', description='Learn Python programming', author='Python Author', price=20.0, discounted_price=15.0, slug='python-book')

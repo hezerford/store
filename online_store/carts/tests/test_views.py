@@ -6,7 +6,6 @@ from django.test import RequestFactory
 from carts.views import CartView, AddToCartView, RemoveFromCartView
 from shop.models import Book
 from carts.models import Cart, CartItem
-from rest_framework.test import force_authenticate
 
 @pytest.fixture
 def create_user():
@@ -30,7 +29,7 @@ def authenticated_client(create_user):
     client.user = create_user
     return client
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 def test_cart_view(create_cart):
     # Создаем объект RequestFactory
     factory = RequestFactory()
@@ -50,13 +49,13 @@ def test_cart_view(create_cart):
     # Проверяем статус-код
     assert response.status_code == 200
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 def test_add_to_cart_view(authenticated_client, create_book, create_cart):
     url = reverse('add-to-cart', kwargs={'book_slug': create_book.slug})
     response = AddToCartView.as_view()(authenticated_client, book_slug=create_book.slug)
     assert response.status_code == 302  # Redirect status code
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 def test_remove_from_cart_view(authenticated_client, create_book, create_cart_item):
     url = reverse('remove-from-cart', kwargs={'book_slug': create_book.slug})
     response = RemoveFromCartView.as_view()(authenticated_client, book_slug=create_book.slug)

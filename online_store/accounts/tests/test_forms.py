@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from accounts.forms import RegisterUserForm, LoginUserForm
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 def test_register_user_form_valid_data():
     form_data = {
         'username': 'testuser',
@@ -14,7 +14,7 @@ def test_register_user_form_valid_data():
     form = RegisterUserForm(data=form_data)
     assert form.is_valid()
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 def test_regiser_user_form_invalid_data():
     form_data = {
         'username': 'testuser',
@@ -25,7 +25,7 @@ def test_regiser_user_form_invalid_data():
     assert not form.is_valid()
     assert 'password2' in form.errors
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 def test_succcesful_login():
     # Создаем тестового пользователя
     username = 'testuser'
@@ -44,7 +44,7 @@ def test_succcesful_login():
     assert response.status_code == 200
     assert '_auth_user_id' in client.session
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 def test_login_user_form_invalid_data():
     form_data = {
         'username': 'nonexistentuser',
