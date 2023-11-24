@@ -147,6 +147,7 @@ class BookSearchView(View):
 
         context = {'form': form, 'books': books}
         return render(request, self.template_name, context)
+    
 class AllBooks(ListView):
     model = Book
     template_name = 'shop/all_books.html'
