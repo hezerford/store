@@ -19,4 +19,4 @@ def test_user_profile_creation(create_user_profile):
     assert profile.user.last_name is not None
     assert profile.address is not None
     assert profile.phone_number is not None
-    assert profile.profile_picture is not None
+    assert profile.profile_picture is not None  

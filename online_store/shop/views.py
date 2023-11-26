@@ -14,7 +14,7 @@ from .utils import *
 
 from random import choice
 
-class BookHome(ListView):
+class Home(ListView):
     model = Book
     template_name = 'shop/main.html'
 

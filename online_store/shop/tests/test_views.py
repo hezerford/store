@@ -4,7 +4,7 @@ from django.test import Client, RequestFactory
 from django.urls import reverse
 from mixer.backend.django import mixer
 
-from shop.views import BookHome
+from shop.views import Home
 from shop.models import Book, Genre, Quote
 from profiles.models import UserProfile
 from django.contrib.auth.models import User
@@ -17,7 +17,7 @@ def test_book_home_view():
     mixer.blend(Quote)
 
     request = RequestFactory().get(reverse('home'))
-    response = BookHome.as_view()(request)
+    response = Home.as_view()(request)
 
     assert response.status_code == 200
     assert 'title' in response.context_data
