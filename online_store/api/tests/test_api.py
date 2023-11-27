@@ -2,14 +2,15 @@ import pytest
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
+from mixer.backend.django import mixer
 from shop.models import Book
 from django.contrib.auth.models import User
 
 @pytest.fixture
 def create_book():
-    def _create_book(title='Test Book',description='Test Description', author='Test Author', price=20.0, discounted_price=15.0, is_published=True,slug='test-book'):
-        return Book.objects.create(title=title, description=description, author=author, price=price, discounted_price=discounted_price, is_published=is_published, slug=slug)
-
+    def _create_book(**kwargs):
+        return mixer.blend(Book, photo=None, **kwargs)
+    
     return _create_book
 
 @pytest.fixture

@@ -11,26 +11,21 @@ from bs4 import BeautifulSoup
 
 @pytest.fixture
 def create_user():
-    return mixer.blend(User, username="testuser")
+    return mixer.blend(User)
 
 @pytest.fixture
 def create_user_profile(create_user):
     return mixer.blend(UserProfile, user=create_user, phone_number='+1234567890')
 
-@pytest.fixture
-def authenticated_client(create_user):
-    client = RequestFactory().get(reverse('profile-detail', kwargs={'username': 'testuser'}))
-    client.user = create_user
-    return client
-
 @pytest.mark.django_db(transaction=True)
-def test_profile_detail_view(authenticated_client, create_user_profile):
+def test_profile_detail_view(create_user, create_user_profile):
     # Используем RequestFactory для создания запроса с параметром username
-    request = RequestFactory().get(reverse('profile-detail', kwargs={'username': 'testuser'}))
-    request.user = authenticated_client.user
+    request = RequestFactory().get(reverse('profile-detail', kwargs={'username': create_user.username}))
+
+    request.user = create_user
 
     # Вызываем представление с запросом
-    response = ProfileDetailView.as_view()(request, username='testuser')
+    response = ProfileDetailView.as_view()(request, username=create_user.username)
 
     assert response.status_code == 200
     assert 'user_profile' in response.context_data
@@ -64,11 +59,11 @@ def updated_data():
     }
 
 @pytest.mark.django_db(transaction=True)
-def test_profile_update_view(authenticated_client, create_user_profile, updated_data):
+def test_profile_update_view(create_user, create_user_profile, updated_data):
     # Используем RequestFactory для создания запроса
-    request = RequestFactory().post(reverse('profile-update', kwargs={'username': 'testuser'}))
+    request = RequestFactory().post(reverse('profile-update', kwargs={'username': create_user.username}))
 
-    request.user = authenticated_client.user
+    request.user = create_user
 
     # Вызываем представление с запросом
     response = ProfileUpdateView.as_view()(request)

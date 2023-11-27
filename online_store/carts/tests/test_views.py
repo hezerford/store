@@ -23,25 +23,13 @@ def create_cart(create_user):
 def create_cart_item(create_cart, create_book):
     return mixer.blend(CartItem, cart=create_cart, book=create_book)
 
-@pytest.fixture
-def authenticated_client(create_user):
-    client = RequestFactory().post(reverse('add-to-cart', kwargs={'book_slug': 'your-book-slug'}))
-    client.user = create_user
-    return client
-
 @pytest.mark.django_db(transaction=True)
-def test_cart_view(create_cart):
-    # Создаем объект RequestFactory
-    factory = RequestFactory()
-
+def test_cart_view(create_user, create_cart):
     # Создаем GET-запрос
-    request = factory.get(reverse('cart'))
-
-    # Создаем пользователя
-    user = User.objects.create_user(username='testuser', password='testpass12345')
+    request = RequestFactory().get(reverse('cart'))
 
     # Принудительно аутентифицируем запрос
-    request.user = user
+    request.user = create_user
 
     # Передаем GET-запрос в представление
     response = CartView.as_view()(request)
@@ -50,13 +38,29 @@ def test_cart_view(create_cart):
     assert response.status_code == 200
 
 @pytest.mark.django_db(transaction=True)
-def test_add_to_cart_view(authenticated_client, create_book, create_cart):
-    url = reverse('add-to-cart', kwargs={'book_slug': create_book.slug})
-    response = AddToCartView.as_view()(authenticated_client, book_slug=create_book.slug)
-    assert response.status_code == 302  # Redirect status code
+def test_add_to_cart_view(create_user, create_book, create_cart_item):
+    # Создаем POST-запрос
+    request = RequestFactory().post(reverse('add-to-cart', kwargs={'book_slug': create_book.slug}))
+
+    # Передаем во view нашего аутентифицированного созданного пользователя
+    request.user = create_user
+
+    # Передаем POST-запрос в представление
+    response = AddToCartView.as_view()(request, book_slug=create_book.slug)
+
+    # Проверяем статус-код
+    assert response.status_code == 302
 
 @pytest.mark.django_db(transaction=True)
-def test_remove_from_cart_view(authenticated_client, create_book, create_cart_item):
-    url = reverse('remove-from-cart', kwargs={'book_slug': create_book.slug})
-    response = RemoveFromCartView.as_view()(authenticated_client, book_slug=create_book.slug)
-    assert response.status_code == 302  # Redirect status code
+def test_remove_from_cart_view(create_user, create_book, create_cart_item):
+    # Создаем POST-запрос
+    request = RequestFactory().post(reverse('remove-from-cart', kwargs={'book_slug': create_book.slug}))
+
+    # Передаем во view нашего аутентифицированного созданного пользователя
+    request.user = create_user
+
+    # Передаем POST-запрос в представление
+    response = RemoveFromCartView.as_view()(request, book_slug=create_book.slug)
+
+    # Проверяем статус-код
+    assert response.status_code == 302
